@@ -9,11 +9,14 @@ import com.example.videoplayerbykotlin.databinding.ActivityMainBinding
 import com.example.videoplayerbykotlin.ui.home.HomeFragment
 import com.example.videoplayerbykotlin.ui.list.ListFragment
 import com.example.videoplayerbykotlin.ui.setting.SettingFragment
+import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
-    private val TAG = "VideoPlayer"
+    lateinit var bottomNavigationView : BottomNavigationView
+
+    private val TAG ="MVVM"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -22,8 +25,8 @@ class MainActivity : AppCompatActivity() {
 
         replaceFragment(HomeFragment())
 
-        binding.bottomNavigationView.setOnClickListener {item ->
-            when (item.id) {
+        binding.bottomNavigationView.setOnItemSelectedListener {
+            when (it.itemId) {
                 R.id.navigation_home -> {
                     replaceFragment(HomeFragment())
 //                    Toast.makeText(applicationContext, "Home", Toast.LENGTH_SHORT).show()
