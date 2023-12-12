@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="220dp"
+    tools:ignore="MissingDefaultResource">
+
+    <VideoView
+            android:id="@+id/video_view"
+            android:layout_width="match_parent"
+            android:layout_height="220dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/ic_replay"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginLeft="85dp"
+                android:src="@drawable/ic_replay"
+                android:visibility="invisible">
+
+            </ImageView>
+
+            <ImageView
+                android:id="@+id/ic_play"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginLeft="50dp"
+                android:src="@drawable/ic_play"
+                android:visibility="invisible"></ImageView>
+
+            <ImageView
+                android:id="@+id/ic_foward"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginLeft="50dp"
+                android:src="@drawable/ic_foward"
+                android:visibility="invisible">
+
+            </ImageView>
+
+        </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_gravity="bottom">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/progress_time"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true">
+
+            </TextView>
+
+            <TextView
+                android:id="@+id/total_time"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true">
+
+            </TextView>
+        </RelativeLayout>
+        <SeekBar
+            android:id="@+id/seekBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:progressTint="@color/red"
+            android:progressBackgroundTint="@color/white"
+            android:thumbTint="@color/red" />
+
+    </LinearLayout>
+
+
+
+</FrameLayout>

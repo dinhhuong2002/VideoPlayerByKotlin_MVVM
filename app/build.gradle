@@ -51,4 +51,6 @@ dependencies {
 
 //    implementation 'androidx.appcompat:appcompat:1.4.2'
     implementation "androidx.activity:activity-ktx:1.7.1"
+
+//    api project (path: "player")
 }
