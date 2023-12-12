@@ -26,18 +26,20 @@ class MainActivity : AppCompatActivity() {
             when (item.id) {
                 R.id.navigation_home -> {
                     replaceFragment(HomeFragment())
-                    Toast.makeText(applicationContext, "Home", Toast.LENGTH_SHORT).show()
+//                    Toast.makeText(applicationContext, "Home", Toast.LENGTH_SHORT).show()
+                    Log.d(TAG, "HomeFragment")
                     true
                 }
                 R.id.navigation_list -> {
                     replaceFragment(ListFragment())
-                    Toast.makeText(applicationContext, "Playlist", Toast.LENGTH_SHORT).show()
-                    Log.d(TAG, "PlaylistFragment")
+//                    Toast.makeText(applicationContext, "List Video", Toast.LENGTH_SHORT).show()
+                    Log.d(TAG, "ListFragment")
                     true
                 }
                 R.id.navigation_setting -> {
                     replaceFragment(SettingFragment())
-                    Toast.makeText(applicationContext, "Notifications", Toast.LENGTH_SHORT).show()
+//                    Toast.makeText(applicationContext, "Notifications", Toast.LENGTH_SHORT).show()
+                    Log.d(TAG, "SettingFragment")
                     true
                 }
                 else -> false
