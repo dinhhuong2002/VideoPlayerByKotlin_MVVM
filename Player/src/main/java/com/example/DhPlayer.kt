@@ -8,7 +8,7 @@ import android.widget.SeekBar
 import java.text.SimpleDateFormat
 import java.util.Date
 
-class DhPlayer: MediaPlayer() {
+class DhPlayer: MediaPlayer(){
 
     var state = 0
     var STATE_IDLE = 1
@@ -20,6 +20,11 @@ class DhPlayer: MediaPlayer() {
 
     //playvideo
     fun play() {
+
+    }
+
+    //pause video
+    override fun pause() {
 
     }
 
@@ -79,10 +84,7 @@ class DhPlayer: MediaPlayer() {
         super.setOnErrorListener(listener)
     }
 
-    //pause video
-    override fun pause() {
 
-    }
 
 
     //format time
