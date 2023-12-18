@@ -1,10 +1,6 @@
 package com.example.videoplayerbykotlin.ui.home
 
 import android.content.Context
-import android.media.MediaPlayer
-import android.media.MediaPlayer.OnPreparedListener
-import android.net.Uri
-import android.nfc.Tag
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -13,15 +9,8 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.FrameLayout
-import android.widget.MediaController
 import android.widget.TextView
-import android.widget.Toast
-import android.widget.VideoView
 import androidx.fragment.app.Fragment
-import androidx.media3.common.MediaItem
-import androidx.media3.exoplayer.ExoPlayer
-import androidx.media3.ui.PlayerView
-import com.example.DhPlayer
 import com.example.DhPlayerView
 import com.example.videoplayerbykotlin.R
 
@@ -45,9 +34,6 @@ class HomeFragment : Fragment() {
 
     private val TAG: String = "HomeFragment"
 
-    private var exoPlayer: ExoPlayer?=null
-//    private val playerView: PlayerView? = null
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -68,17 +54,14 @@ class HomeFragment : Fragment() {
         enterLink?.setText(url)
 
         dhPlayerView = context?.let { DhPlayerView(it) }
-        exoPlayer= context?.let { ExoPlayer.Builder(it).build() }
 
         frameLayout?.addView(dhPlayerView) //set view dhPlayer from Libs
 
-        btnConfig?.setOnClickListener{
-            Log.d(TAG,"Clicked button config!")
-            Log.d(TAG,url)
-            if (exoPlayer != null) {
-                dhPlayerView?.let { it1 -> DhPlayerView.playvideo(exoPlayer!!, it1,url) }
-            }
+        btnConfig?.setOnClickListener {
+            Log.d(TAG, "Clicked button config!")
+            Log.d(TAG, url)
 
+            DhPlayerView.playVideoByURL(requireContext(), url)
 //            showConfig(exoPlayer)
         }
     }

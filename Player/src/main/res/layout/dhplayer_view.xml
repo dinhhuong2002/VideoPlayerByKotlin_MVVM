@@ -6,11 +6,11 @@
     android:background="@color/orange"
     tools:ignore="MissingDefaultResource">
 
-<!--    <androidx.media3.ui.PlayerView-->
-<!--        android:id="@+id/video_view"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="220dp">-->
-<!--    </androidx.media3.ui.PlayerView>-->
+    <androidx.media3.ui.PlayerView
+        android:id="@+id/video_view"
+        android:layout_width="match_parent"
+        android:layout_height="220dp">
+    </androidx.media3.ui.PlayerView>
 <!--    <VideoView-->
 <!--        android:id="@+id/video_view"-->
 <!--        android:layout_width="match_parent"-->
@@ -50,7 +50,7 @@
                 android:layout_height="50dp"
                 android:layout_marginLeft="50dp"
                 android:src="@drawable/ic_play"
-                android:visibility="invisible"></ImageView>
+                android:visibility="visible"></ImageView>
 
             <ImageView
                 android:id="@+id/ic_foward"
