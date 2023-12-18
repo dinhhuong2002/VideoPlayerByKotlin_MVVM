@@ -4,7 +4,11 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.media.MediaPlayer
 import android.net.Uri
+import android.view.View
+import android.widget.ImageView
 import android.widget.SeekBar
+import android.widget.TextView
+import com.example.player.R
 import java.text.SimpleDateFormat
 import java.util.Date
 
@@ -20,6 +24,7 @@ class DhPlayer: MediaPlayer(){
 
     //playvideo
     fun play() {
+
 
     }
 

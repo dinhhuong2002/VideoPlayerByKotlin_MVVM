@@ -3,12 +3,30 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="220dp"
+    android:background="@color/orange"
     tools:ignore="MissingDefaultResource">
 
-    <VideoView
-            android:id="@+id/video_view"
-            android:layout_width="match_parent"
-            android:layout_height="220dp" />
+<!--    <androidx.media3.ui.PlayerView-->
+<!--        android:id="@+id/video_view"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="220dp">-->
+<!--    </androidx.media3.ui.PlayerView>-->
+<!--    <VideoView-->
+<!--        android:id="@+id/video_view"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="220dp">-->
+
+<!--    </VideoView>-->
+
+    <TextView
+        android:id="@+id/tv_test"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="This is dhPlayer view"
+        android:textSize="17sp"
+        android:textStyle="bold"
+        android:textColor="@color/white"
+        android:layout_gravity="top|center_horizontal"/>
 
         <LinearLayout
             android:layout_width="match_parent"
