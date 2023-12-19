@@ -64,5 +64,6 @@ class HomeFragment : Fragment() {
             DhPlayerView.playVideoByURL(requireContext(), url)
 //            showConfig(exoPlayer)
         }
+
     }
 }
