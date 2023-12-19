@@ -58,15 +58,16 @@ class HomeFragment : Fragment() {
         dhPlayerView = context?.let { DhPlayerView(it) }
         playerViewJava = PlayerViewJava(context)
 
-//        frameLayout?.addView(dhPlayerView) //set view dhPlayer from Libs
-        frameLayout?.addView(playerViewJava)
+        //set view dhPlayer from Libs
+        frameLayout?.addView(dhPlayerView)
+//        frameLayout?.addView(playerViewJava)
 
         btnConfig?.setOnClickListener {
             Log.d(TAG, "Clicked button config!")
             Log.d(TAG, url)
 
-//            DhPlayerView.playVideoByURL(requireContext(), url)
-            playerViewJava!!.playVideoByUrl(context,url)
+            dhPlayerView!!.playVideoByUrl(requireContext(), url)
+//            playerViewJava!!.playVideoByUrl(context,url)
 //            showConfig(exoPlayer)
         }
 
