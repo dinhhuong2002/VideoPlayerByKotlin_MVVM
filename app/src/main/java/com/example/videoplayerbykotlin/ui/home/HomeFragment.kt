@@ -12,6 +12,7 @@ import android.widget.FrameLayout
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.example.DhPlayerView
+import com.example.PlayerViewJava
 import com.example.videoplayerbykotlin.R
 
 // TODO: Rename parameter arguments, choose names that match
@@ -31,6 +32,7 @@ class HomeFragment : Fragment() {
     private var btnConfig: Button? = null
     private var showConfig: TextView? = null
     private var dhPlayerView: DhPlayerView? = null
+    private var playerViewJava: PlayerViewJava? = null
 
     private val TAG: String = "HomeFragment"
 
@@ -54,14 +56,17 @@ class HomeFragment : Fragment() {
         enterLink?.setText(url)
 
         dhPlayerView = context?.let { DhPlayerView(it) }
+        playerViewJava = PlayerViewJava(context)
 
-        frameLayout?.addView(dhPlayerView) //set view dhPlayer from Libs
+//        frameLayout?.addView(dhPlayerView) //set view dhPlayer from Libs
+        frameLayout?.addView(playerViewJava)
 
         btnConfig?.setOnClickListener {
             Log.d(TAG, "Clicked button config!")
             Log.d(TAG, url)
 
-            DhPlayerView.playVideoByURL(requireContext(), url)
+//            DhPlayerView.playVideoByURL(requireContext(), url)
+            playerViewJava!!.playVideoByUrl(context,url)
 //            showConfig(exoPlayer)
         }
 

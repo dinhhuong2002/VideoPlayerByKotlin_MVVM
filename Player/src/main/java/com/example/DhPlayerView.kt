@@ -1,5 +1,6 @@
 package com.example
 
+import android.annotation.SuppressLint
 import android.content.ContentValues.TAG
 import android.content.Context
 import android.util.Log
@@ -10,41 +11,34 @@ import androidx.media3.ui.PlayerView
 import com.example.player.R
 import com.example.player.databinding.DhplayerViewBinding
 
+
 class DhPlayerView(context: Context) : PlayerView(context) {
 
     init {
         init()
-        createExoPlayer(context)
     }
 
     companion object {
 
-        private val binding: DhplayerViewBinding
-            get() {
-                TODO()
-            }
-
-
-        var exoPlayer: ExoPlayer? = null
-        var mediaItem: MediaItem? = null
+        @SuppressLint("StaticFieldLeak")
+        var binding: DhplayerViewBinding? = null
 
         fun playVideoByURL(context: Context, url: String) {
 
-            exoPlayer = createExoPlayer(context)
-            var playerView = binding.videoView
+            val exoPlayer: ExoPlayer?
+            val mediaItem: MediaItem?
 
-            playerView!!.player = exoPlayer
+            exoPlayer = ExoPlayer.Builder(context).build()
+            val playerView: DhPlayerView? = this.binding?.videoView as DhPlayerView?
+
+            playerView?.player=null
+            playerView?.player = exoPlayer
             mediaItem = MediaItem.fromUri(url) //setMediaItem
-            exoPlayer!!.setMediaItem(mediaItem!!)
-            exoPlayer!!.prepare()
-            exoPlayer!!.play()
+            exoPlayer.setMediaItem(mediaItem)
+            exoPlayer.prepare()
+            exoPlayer.play()
 
-            Log.d(TAG, exoPlayer!!.isPlaying().toString())
-        }
-
-        //new ExoPlayer
-        fun createExoPlayer(context: Context): ExoPlayer {
-            return ExoPlayer.Builder(context).build()
+            Log.d(TAG, "Is video playing?  :  " + exoPlayer.isPlaying.toString())
         }
     }
 
