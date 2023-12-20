@@ -24,14 +24,14 @@ public class PlayerViewJava extends PlayerView {
 
     public void playVideoByUrl(Context context, String url) {
 
-        ExoPlayer exoPlayer=new ExoPlayer.Builder(context).build();
-        PlayerView playerView=findViewById(R.id.video_view);
+        ExoPlayer exoPlayer = new ExoPlayer.Builder(context).build();
+        PlayerView playerView = findViewById(R.id.video_view);
 
         exoPlayer = new ExoPlayer.Builder(context).build();
         playerView = findViewById(R.id.video_view);
         playerView.setPlayer(exoPlayer);
 
-        MediaItem mediaItem=MediaItem.fromUri(url);
+        MediaItem mediaItem = MediaItem.fromUri(url);
 
         exoPlayer.setMediaItem(mediaItem);
         exoPlayer.prepare();
