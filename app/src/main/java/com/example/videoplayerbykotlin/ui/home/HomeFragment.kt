@@ -64,17 +64,12 @@ class HomeFragment : Fragment(), IPlayer {
             "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4"
         var url2: String =
             "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4"
-//        enterLink?.setText(url)
 
         dhPlayerView = context?.let { DhPlayerView(it, this) }
         playerViewJava = PlayerViewJava(context)
 
         //set view dhPlayer from Libs
         frameLayout?.addView(dhPlayerView)
-
-
-        /*play video default*/
-//        dhPlayerView!!.playVideoByUrl(requireContext(), url)
 
         //click on button Config
         btnConfig?.setOnClickListener {
@@ -84,21 +79,15 @@ class HomeFragment : Fragment(), IPlayer {
 
             dhPlayerView!!.playVideoByUrl(requireContext(), playLink)
         }
-
-    }
-
-    override fun getPlayerState(context: Context, url: String): String {
-        TODO("Not yet implemented")
-    }
-
-    override fun addAnalyticsListener(listener: AnalyticsListener?) {
-        TODO("Not yet implemented")
     }
 
     @SuppressLint("SetTextI18n")
-    override fun testShowLog(eventLog: String) {
+    override fun getPlayerState(eventLog: String) {
+
         var currentLog: String = textViewShowConfig?.text.toString()
-        textViewShowConfig?.text = "$currentLog \n $eventLog"
+        textViewShowConfig?.movementMethod = ScrollingMovementMethod()
+        textViewShowConfig?.text = "$eventLog \n $currentLog"
+
     }
 
 
