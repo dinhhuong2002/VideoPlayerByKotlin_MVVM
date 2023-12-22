@@ -1,7 +1,9 @@
 package com.example.videoplayerbykotlin.ui.home
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
+import android.text.method.ScrollingMovementMethod
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -12,11 +14,11 @@ import android.widget.FrameLayout
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.media3.exoplayer.analytics.AnalyticsListener
-import androidx.media3.exoplayer.util.EventLogger
 import com.example.DhPlayerView
-import com.example.IPlayerKotlin
+import com.example.IPlayer
 import com.example.PlayerViewJava
 import com.example.videoplayerbykotlin.R
+
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -28,12 +30,12 @@ private const val ARG_PARAM2 = "param2"
  * Use the [HomeFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class HomeFragment : Fragment(), IPlayerKotlin {
+class HomeFragment : Fragment(), IPlayer {
     // TODO: Rename and change types of parameters
     private var frameLayout: FrameLayout? = null
-    private var enterLink: EditText? = null
+    private var editTextLinkVideo: EditText? = null
     private var btnConfig: Button? = null
-    private var showConfig: TextView? = null
+    private var textViewShowConfig: TextView? = null
     private var dhPlayerView: DhPlayerView? = null
     private var playerViewJava: PlayerViewJava? = null
 
@@ -50,9 +52,11 @@ class HomeFragment : Fragment(), IPlayerKotlin {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         frameLayout = view.findViewById<FrameLayout>(R.id.home_video)
-        enterLink = view.findViewById<EditText>(R.id.enter_link)
+        editTextLinkVideo = view.findViewById<EditText>(R.id.enter_link)
         btnConfig = view.findViewById<Button>(R.id.btn_Stream)
-        showConfig = view.findViewById<TextView>(R.id.player_state)
+        textViewShowConfig = view.findViewById<TextView>(R.id.player_state)
+
+        textViewShowConfig?.movementMethod = ScrollingMovementMethod()
 
         var url: String =
             "http://techslides.com/demos/sample-videos/small.mp4"
@@ -62,31 +66,40 @@ class HomeFragment : Fragment(), IPlayerKotlin {
             "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4"
 //        enterLink?.setText(url)
 
-        dhPlayerView = context?.let { DhPlayerView(it) }
+        dhPlayerView = context?.let { DhPlayerView(it, this) }
         playerViewJava = PlayerViewJava(context)
 
         //set view dhPlayer from Libs
         frameLayout?.addView(dhPlayerView)
-//        frameLayout?.addView(playerViewJava)
 
+
+        /*play video default*/
+//        dhPlayerView!!.playVideoByUrl(requireContext(), url)
+
+        //click on button Config
         btnConfig?.setOnClickListener {
-            val playLink: String = enterLink?.text.toString()
+            val playLink: String = editTextLinkVideo?.text.toString()
             Log.d(TAG, "Clicked button config!")
             Log.d(TAG, url)
 
             dhPlayerView!!.playVideoByUrl(requireContext(), playLink)
-//            playerViewJava!!.playVideoByUrl(context,url3)
         }
 
     }
 
     override fun getPlayerState(context: Context, url: String): String {
         TODO("Not yet implemented")
-//        showConfig?.setText(exoplayer.addAnalyticsListener(EventLogger()))
-
     }
+
     override fun addAnalyticsListener(listener: AnalyticsListener?) {
         TODO("Not yet implemented")
-//        exoPlayer.addAnalyticsListener(EventLogger())
     }
+
+    @SuppressLint("SetTextI18n")
+    override fun testShowLog(eventLog: String) {
+        var currentLog: String = textViewShowConfig?.text.toString()
+        textViewShowConfig?.text = "$currentLog \n $eventLog"
+    }
+
+
 }
