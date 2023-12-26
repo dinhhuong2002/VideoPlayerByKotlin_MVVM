@@ -11,54 +11,18 @@
         android:layout_width="match_parent"
         android:layout_height="220dp">
 
-        <VideoView
-            android:id="@+id/video_view"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent" />
-
-        <LinearLayout
+        <com.example.DhPlayerView
+            android:id="@+id/videoInList"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:id="@+id/ic_replay"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_marginLeft="85dp"
-                android:src="@drawable/ic_replay"
-                android:visibility="invisible">
-
-            </ImageView>
-
-            <ImageView
-                android:id="@+id/ic_play"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_marginLeft="50dp"
-                android:src="@drawable/ic_play"
-                android:visibility="invisible"></ImageView>
-
-            <ImageView
-                android:id="@+id/ic_foward"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_marginLeft="50dp"
-                android:src="@drawable/ic_foward"
-                android:visibility="invisible">
-
-            </ImageView>
-
-        </LinearLayout>
+            android:layout_height="220dp"></com.example.DhPlayerView>
 
     </FrameLayout>
 
 
-    <EditText
+    <TextView
+        android:id="@+id/linkOfTheVideo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Enter the link of the video..."
-        android:minHeight="48dp"></EditText>
+        android:minHeight="48dp"></TextView>
 
 </LinearLayout>

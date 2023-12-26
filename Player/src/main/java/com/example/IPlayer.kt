@@ -6,11 +6,7 @@ import androidx.media3.exoplayer.analytics.AnalyticsListener
 
 interface IPlayer {
     // Hàm trả về trạng thái của player
-    fun getPlayerState(context: Context, url:String): String
-
-    fun addAnalyticsListener(listener: AnalyticsListener?)
-    fun testShowLog(eventLog: String)
-    
+    fun getPlayerState(eventLog: String)
 }
 
 // Khai báo các trạng thái của player

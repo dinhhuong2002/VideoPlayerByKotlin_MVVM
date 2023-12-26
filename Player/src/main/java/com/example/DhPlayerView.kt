@@ -7,25 +7,27 @@ import android.view.LayoutInflater
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.SeekBar
+import android.widget.SeekBar.OnSeekBarChangeListener
 import android.widget.TextView
-import androidx.annotation.OptIn
 import androidx.media3.common.MediaItem
 import androidx.media3.common.PlaybackException
 import androidx.media3.common.Player
-import androidx.media3.common.util.UnstableApi
 import androidx.media3.exoplayer.ExoPlayer
-import androidx.media3.exoplayer.analytics.AnalyticsListener
 import androidx.media3.exoplayer.util.EventLogger
 import androidx.media3.ui.PlayerView
 import com.example.player.R
 import java.text.SimpleDateFormat
 import java.util.Date
 
-class DhPlayerView(context: Context, iPlayer: IPlayer) : FrameLayout(context), Player.Listener {
+class DhPlayerView(context: Context, iPlayer: IPlayer) : FrameLayout(context), Player.Listener,
+    SeekBar.OnSeekBarChangeListener {
 
     private lateinit var totalTime: String
+    private lateinit var currentTime: String
     private var iPlayer: IPlayer? = null //khoi tao interface
-
+    private lateinit var playerView: PlayerView
+    private lateinit var exoController: FrameLayout
+    private var exoPlayer: ExoPlayer? = null
     private var icPlay: ImageView? = null
     private var icForward: ImageView? = null
     private var icPause: ImageView? = null
@@ -55,6 +57,7 @@ class DhPlayerView(context: Context, iPlayer: IPlayer) : FrameLayout(context), P
         // Use LayoutInflater to inflate the layout into the custom view
         val inflater = LayoutInflater.from(context)
         inflater.inflate(R.layout.dhplayer_view, this, true)
+
     }
 
     private fun bindView() {
@@ -64,26 +67,88 @@ class DhPlayerView(context: Context, iPlayer: IPlayer) : FrameLayout(context), P
         seekBar = findViewById(R.id.seekBar)
         tvProgressTime = findViewById(R.id.progress_time)
         tvTotalTime = findViewById(R.id.total_time)
+        playerView = findViewById(R.id.video_view)
+        exoController = findViewById(R.id.controller)
+
+
+
+        icPlay?.setOnClickListener {
+            playPause()
+        }
+        icForward?.setOnClickListener {
+            seekForward()
+        }
+        icReplay?.setOnClickListener {
+            seekReplay()
+        }
+        playerView.setOnClickListener {
+            if (exoController.visibility == VISIBLE) {
+                exoController.visibility = INVISIBLE
+            } else if (exoController.visibility == INVISIBLE) {
+                exoController.visibility = VISIBLE
+            }
+        }
+        seekBar?.setOnSeekBarChangeListener(this)
     }
 
     fun playVideoByUrl(context: Context, url: String) {
-        val mediaItem = MediaItem.fromUri(url)
-        var exoPlayer = ExoPlayer.Builder(context).build()
-        var playerView = findViewById<PlayerView>(R.id.video_view)
+        try {
+            val mediaItem = MediaItem.fromUri(url)
+            exoPlayer = ExoPlayer.Builder(context).build()
+            playerView = findViewById<PlayerView>(R.id.video_view)
 
-        playerView.player = exoPlayer
-        exoPlayer.setMediaItem(mediaItem)
-        exoPlayer.prepare()
-        exoPlayer.play()
+            playerView.player = exoPlayer
+            exoPlayer!!.setMediaItem(mediaItem)
+            exoPlayer!!.prepare()
+            exoPlayer!!.play()
 
-        exoPlayer.addListener(this)
-//        exoPlayer.addAnalyticsListener()
+            state = STATE_PLAYING
+            exoPlayer!!.addListener(this) // get call back
+//        exoPlayer.addAnalyticsListener() //add eventLogger to show log PlayerState in Logcat
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 
-    override fun onEvents(player: Player, events: Player.Events) {
-        super.onEvents(player, events)
-        Log.d("Xuantk", "event: ${events}")
+    fun playPause() {
+        state = if (state == STATE_PLAYING && exoPlayer!!.isPlaying) {
+            exoPlayer?.pause()
+            icPlay?.setImageResource(R.drawable.ic_pause)
+            STATE_PAUSE
+        } else {
+            exoPlayer?.play()
+            icPlay?.setImageResource(R.drawable.ic_play)
+            STATE_PLAYING
+        }
     }
+
+    fun seekForward() {
+        seekBar?.progress = seekBar?.progress!! + 10
+
+    }
+
+    fun seekReplay() {
+        seekBar?.progress = seekBar?.progress!! - 10
+    }
+
+    private fun updateTime() {
+        totalTime = exoPlayer?.duration.toString()
+
+        if (state == STATE_PLAYING || state == STATE_PAUSE) {
+
+            currentTime = (exoPlayer!!.currentPosition).toString()
+
+            tvProgressTime!!.text = getTime(currentTime.toInt())
+            tvTotalTime!!.text = getTime(totalTime.toInt())
+            seekBar!!.progress = currentTime.toInt()
+        }
+    }
+
+    @SuppressLint("SimpleDateFormat")
+    private fun getTime(time: Int): String? {
+        return SimpleDateFormat("mm:ss").format(Date(time.toLong()))
+    }
+
 
     override fun onPlaybackStateChanged(playbackState: Int) {
         super.onPlaybackStateChanged(playbackState)
@@ -91,25 +156,22 @@ class DhPlayerView(context: Context, iPlayer: IPlayer) : FrameLayout(context), P
         when (playbackState) {
             Player.STATE_IDLE -> {
                 Log.d("Xuantk", "Player.STATE_IDLE: ")
-                iPlayer?.testShowLog("Player.STATE_IDLE: ")
+                iPlayer?.getPlayerState("Player: STATE_IDLE ")
             }
+
             Player.STATE_BUFFERING -> {
                 Log.d("Xuantk", "Player.STATE_BUFFERING: ")
-                iPlayer?.testShowLog("Player.STATE_BUFFERING: ")
+                iPlayer?.getPlayerState("Player: STATE_BUFFERING ")
             }
+
             Player.STATE_READY -> {
                 Log.d("Xuantk", "Player.STATE_READY: ")
-                iPlayer?.testShowLog("Player.STATE_READY: ")
+                iPlayer?.getPlayerState("Player: STATE_READY ")
             }
-            Player.EVENT_IS_PLAYING_CHANGED -> {
-                iPlayer?.testShowLog("Player.EVENT_IS_PLAYING_CHANGED: ")
-            }
+
             Player.STATE_ENDED -> {
                 Log.d("Xuantk", "Player.STATE_ENDED: ")
-                iPlayer?.testShowLog("Player.STATE_ENDED: ")
-            }
-            Player.EVENT_PLAYER_ERROR -> {
-                iPlayer?.testShowLog("Player.EVENT_PLAYER_ERROR: ")
+                iPlayer?.getPlayerState("Player.STATE_ENDED -> video ended ")
             }
         }
     }
@@ -117,31 +179,36 @@ class DhPlayerView(context: Context, iPlayer: IPlayer) : FrameLayout(context), P
     override fun onPlayerError(error: PlaybackException) {
         super.onPlayerError(error)
 
-        Log.d("Xuantk", "onPlayerError: ${error.toString()} ")
-        iPlayer?.testShowLog("Player.ERROR: ")
+        Log.d("Xuantk", "onPlayerError: " + error.errorCodeName)
+        iPlayer?.getPlayerState("Player.ERROR: " + error.errorCodeName)
     }
 
     override fun onIsPlayingChanged(isPlaying: Boolean) {
         super.onIsPlayingChanged(isPlaying)
+        var playOrPause: String
 
-        iPlayer?.testShowLog("Player.IsPlayingChanged: ")
+        if (isPlaying) {
+            playOrPause = "playing"
+        } else {
+            playOrPause = "paused"
+        }
+        Log.d("Xuantk", "onPlayerError: $playOrPause")
+        iPlayer?.getPlayerState("Player: IsPlayingChanged: ->  $playOrPause")
     }
 
-    override fun onPlayerErrorChanged(error: PlaybackException?) {
-        super.onPlayerErrorChanged(error)
 
-        iPlayer?.testShowLog("Player.PlayerErrorChanged: ")
+    //method of seekbar
+    override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+        TODO("Not yet implemented")
     }
 
-    override fun onVolumeChanged(volume: Float) {
-        super.onVolumeChanged(volume)
-
-        iPlayer?.testShowLog("Player.VolumeChanged: ")
+    override fun onStartTrackingTouch(seekBar: SeekBar?) {
+        TODO("Not yet implemented")
     }
 
-    override fun onSeekBackIncrementChanged(seekBackIncrementMs: Long) {
-        super.onSeekBackIncrementChanged(seekBackIncrementMs)
-
-        iPlayer?.testShowLog("Player.SeekBackIncrementChanged: ")
+    override fun onStopTrackingTouch(seekBar: SeekBar?) {
+        if (state == STATE_PLAYING || state == STATE_PAUSE) {
+            this.exoPlayer?.seekTo(seekBar!!.progress.toLong())
+        }
     }
 }
