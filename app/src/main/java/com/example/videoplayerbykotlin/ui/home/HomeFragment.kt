@@ -1,7 +1,6 @@
 package com.example.videoplayerbykotlin.ui.home
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.os.Bundle
 import android.text.method.ScrollingMovementMethod
 import android.util.Log
@@ -13,17 +12,10 @@ import android.widget.EditText
 import android.widget.FrameLayout
 import android.widget.TextView
 import androidx.fragment.app.Fragment
-import androidx.media3.exoplayer.analytics.AnalyticsListener
 import com.example.DhPlayerView
 import com.example.IPlayer
 import com.example.PlayerViewJava
 import com.example.videoplayerbykotlin.R
-
-
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
 
 /**
  * A simple [Fragment] subclass.
@@ -89,6 +81,4 @@ class HomeFragment : Fragment(), IPlayer {
         textViewShowConfig?.text = "$eventLog \n $currentLog"
 
     }
-
-
 }

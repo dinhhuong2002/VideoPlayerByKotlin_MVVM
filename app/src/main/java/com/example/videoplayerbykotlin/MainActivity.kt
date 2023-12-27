@@ -33,23 +33,24 @@ class MainActivity : AppCompatActivity() {
                     Log.d(TAG, "HomeFragment")
                     true
                 }
+
                 R.id.navigation_list -> {
                     replaceFragment(ListFragment())
 //                    Toast.makeText(applicationContext, "List Video", Toast.LENGTH_SHORT).show()
                     Log.d(TAG, "ListFragment")
                     true
                 }
+
                 R.id.navigation_setting -> {
                     replaceFragment(SettingFragment())
 //                    Toast.makeText(applicationContext, "Notifications", Toast.LENGTH_SHORT).show()
                     Log.d(TAG, "SettingFragment")
                     true
                 }
+
                 else -> false
             }
         }
-
-
     }
 
     private fun replaceFragment(fragment: Fragment) {
