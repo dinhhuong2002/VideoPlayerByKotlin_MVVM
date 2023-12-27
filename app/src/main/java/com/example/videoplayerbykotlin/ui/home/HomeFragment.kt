@@ -63,11 +63,15 @@ class HomeFragment : Fragment(), IPlayer {
         //set view dhPlayer from Libs
         frameLayout?.addView(dhPlayerView)
 
+        val playLink: String = editTextLinkVideo?.text.toString()
+        Log.d(TAG, "Clicked button config!")
+        Log.d(TAG, url)
+
+        dhPlayerView!!.playVideoByUrl(requireContext(), playLink)
+
         //click on button Config
         btnConfig?.setOnClickListener {
-            val playLink: String = editTextLinkVideo?.text.toString()
-            Log.d(TAG, "Clicked button config!")
-            Log.d(TAG, url)
+
 
             dhPlayerView!!.playVideoByUrl(requireContext(), playLink)
         }
