@@ -198,7 +198,7 @@ class DhPlayerView(context: Context, iPlayer: IPlayer) : FrameLayout(context), P
 //                updateTime()
 
                 Thread {
-                    updateTime()
+                    startLooping()
                     Thread.sleep(1000)
                 }.start()
             }
@@ -270,4 +270,6 @@ class DhPlayerView(context: Context, iPlayer: IPlayer) : FrameLayout(context), P
             this.exoPlayer?.seekTo(seekBar!!.progress.toLong())
         }
     }
+
+
 }
