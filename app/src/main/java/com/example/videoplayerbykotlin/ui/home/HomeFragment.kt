@@ -43,6 +43,7 @@ class HomeFragment : Fragment(), IPlayer {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         frameLayout = view.findViewById<FrameLayout>(R.id.home_video)
         editTextLinkVideo = view.findViewById<EditText>(R.id.enter_link)
         btnConfig = view.findViewById<Button>(R.id.btn_Stream)

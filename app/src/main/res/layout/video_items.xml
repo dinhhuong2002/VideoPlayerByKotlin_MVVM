@@ -6,23 +6,16 @@
     android:orientation="vertical"
     tools:context=".MainActivity">
 
-    <FrameLayout
-        android:id="@+id/frameLayout"
-        android:layout_width="match_parent"
-        android:layout_height="220dp">
-
         <com.example.DhPlayerView
             android:id="@+id/videoInList"
             android:layout_width="match_parent"
             android:layout_height="220dp"></com.example.DhPlayerView>
 
-    </FrameLayout>
-
-
     <TextView
         android:id="@+id/linkOfTheVideo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textSize="12sp"
         android:minHeight="48dp"></TextView>
 
 </LinearLayout>

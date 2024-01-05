@@ -10,6 +10,7 @@ import android.widget.SeekBar
 import android.widget.TextView
 import androidx.media3.common.MediaItem
 import androidx.media3.common.PlaybackException
+import androidx.media3.common.PlaybackException.ERROR_CODE_IO_NETWORK_CONNECTION_FAILED
 import androidx.media3.common.Player
 import androidx.media3.common.Timeline
 import androidx.media3.exoplayer.ExoPlayer
@@ -20,11 +21,9 @@ import java.util.Formatter
 import java.util.Locale
 
 
-class DhPlayerView(context: Context, iPlayer: IPlayer) : FrameLayout(context), Player.Listener,
+open class DhPlayerView(context: Context, iPlayer: IPlayer) : FrameLayout(context), Player.Listener,
     SeekBar.OnSeekBarChangeListener {
 
-    private lateinit var totalTime: String
-    private lateinit var currentTime: String
     private var iPlayer: IPlayer? = null //khoi tao interface
     private lateinit var playerView: PlayerView
     private lateinit var exoController: FrameLayout
@@ -35,7 +34,7 @@ class DhPlayerView(context: Context, iPlayer: IPlayer) : FrameLayout(context), P
     private var icPause: ImageView? = null
 
 
-    private var icReplay: ImageView? = null
+    private var icBack: ImageView? = null
     private var seekBar: SeekBar? = null
     private var tvProgressTime: TextView? = null
     private var tvTotalTime: TextView? = null
@@ -69,22 +68,21 @@ class DhPlayerView(context: Context, iPlayer: IPlayer) : FrameLayout(context), P
     private fun bindView() {
         icPlay = findViewById(R.id.ic_play)
         icForward = findViewById(R.id.ic_foward)
-        icReplay = findViewById(R.id.ic_replay)
+        icBack = findViewById(R.id.ic_back)
         seekBar = findViewById(R.id.seekBar)
         tvProgressTime = findViewById(R.id.progress_time)
         tvTotalTime = findViewById(R.id.total_time)
         playerView = findViewById(R.id.video_view)
         exoController = findViewById(R.id.controller)
 
-        seekBar!!.setOnSeekBarChangeListener(this)
         icPlay?.setOnClickListener {
             playPause()
         }
         icForward?.setOnClickListener {
             seekForward()
         }
-        icReplay?.setOnClickListener {
-            seekReplay()
+        icBack?.setOnClickListener {
+            seekReWind()
         }
         playerView.setOnClickListener {
             if (exoController.visibility == VISIBLE) {
@@ -95,6 +93,7 @@ class DhPlayerView(context: Context, iPlayer: IPlayer) : FrameLayout(context), P
         }
 
         seekBar!!.setOnSeekBarChangeListener(this)
+
     }
 
     fun playVideoByUrl(context: Context, url: String) {
@@ -108,7 +107,7 @@ class DhPlayerView(context: Context, iPlayer: IPlayer) : FrameLayout(context), P
 
             state = STATE_PLAYING
             exoPlayer!!.addListener(this) // get call back
-//        exoPlayer.addAnalyticsListener() //add eventLogger to show log PlayerState in Logcat
+            exoPlayer!!.addAnalyticsListener(EventLogger()) //add eventLogger to show log PlayerState in Logcat
             if (thread == null) {
                 startLooping()
             }
@@ -131,16 +130,12 @@ class DhPlayerView(context: Context, iPlayer: IPlayer) : FrameLayout(context), P
 
     private fun seekForward() {
         seekBar?.progress = seekBar?.progress!! + 15
-//        updateTime()
-        exoPlayer?.seekForward()
-
+        exoPlayer!!.seekForward()
     }
 
-    private fun seekReplay() {
+    private fun seekReWind() {
         seekBar?.progress = seekBar?.progress!! - 15
-//        updateTime()
-        exoPlayer?.seekBack()
-
+        exoPlayer!!.seekTo((exoPlayer!!.currentPosition -15000))
     }
 
     //get Exoplayer Duration
@@ -195,8 +190,6 @@ class DhPlayerView(context: Context, iPlayer: IPlayer) : FrameLayout(context), P
 
             Player.STATE_READY -> {
                 iPlayer?.getPlayerState("Player: STATE_READY ")
-//                updateTime()
-
                 Thread {
                     startLooping()
                     Thread.sleep(1000)
@@ -209,15 +202,15 @@ class DhPlayerView(context: Context, iPlayer: IPlayer) : FrameLayout(context), P
             }
         }
     }
+
     private fun startLooping() {
         thread = Thread {
             while (true) {
                 try {
-                    Thread.sleep(500)
+                    Thread.sleep(200)
                 } catch (e: Exception) {
                     return@Thread
                 }
-
                 // Post a Runnable to the main looper's message queue
                 android.os.Handler(Looper.getMainLooper()).post {
                     updateTime()
@@ -232,6 +225,11 @@ class DhPlayerView(context: Context, iPlayer: IPlayer) : FrameLayout(context), P
 
         Log.d("Xuantk", "onPlayerError: " + error.errorCodeName)
         iPlayer?.getPlayerState("Player.ERROR: " + error.errorCodeName)
+        when (error.errorCode) {
+            ERROR_CODE_IO_NETWORK_CONNECTION_FAILED -> {
+                state = STATE_PAUSE
+            }
+        }
     }
 
     override fun onEvents(player: Player, events: Player.Events) {
@@ -251,14 +249,21 @@ class DhPlayerView(context: Context, iPlayer: IPlayer) : FrameLayout(context), P
 
         if (isPlaying) {
             playOrPause = "playing"
+            state = STATE_PLAYING
         } else {
             playOrPause = "paused"
+            state = STATE_PAUSE
         }
         iPlayer?.getPlayerState("Player: IsPlayingChanged: ->  $playOrPause")
+
     }
+
 
     //method of seekbar
     override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+        if (fromUser) {
+            exoPlayer!!.seekTo(progress.toLong());
+        }
     }
 
     override fun onStartTrackingTouch(seekBar: SeekBar?) {
@@ -267,9 +272,15 @@ class DhPlayerView(context: Context, iPlayer: IPlayer) : FrameLayout(context), P
 
     override fun onStopTrackingTouch(seekBar: SeekBar?) {
         if (state == STATE_PLAYING || state == STATE_PAUSE) {
-            this.exoPlayer?.seekTo(seekBar!!.progress.toLong())
+            Log.d("dh", " seekBar.Progress: " + seekBar!!.progress.toString())
+            exoPlayer?.seekTo(seekBar!!.progress.toLong())
         }
     }
 
-
+    private fun updateSeekBar() {
+        val duration = exoPlayer!!.duration
+        val currentPosition = exoPlayer!!.currentPosition
+        val progress = (currentPosition * 1000 / duration).toInt()
+        seekBar!!.progress = progress
+    }
 }
