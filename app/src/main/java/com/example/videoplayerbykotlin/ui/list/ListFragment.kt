@@ -48,8 +48,8 @@ class ListFragment : Fragment() {
                 val visiblePosition =
                     layoutManager!!.findFirstCompletelyVisibleItemPosition() //find view completely visiable
                 if (visiblePosition > -1) {
-                    val uri: String = videoArrayList[visiblePosition].url
-                    dhPlayerView!!.playVideoByUrl(requireContext(), uri)
+                    val url: String = videoArrayList[visiblePosition].url
+                    dhPlayerView!!.playVideoByUrl(requireContext(), url)
                 }
             }
         })

@@ -135,7 +135,7 @@ open class DhPlayerView(context: Context, iPlayer: IPlayer) : FrameLayout(contex
 
     private fun seekReWind() {
         seekBar?.progress = seekBar?.progress!! - 15
-        exoPlayer!!.seekTo((exoPlayer!!.currentPosition -15000))
+        exoPlayer!!.seekTo((exoPlayer!!.currentPosition - 15000))
     }
 
     //get Exoplayer Duration
@@ -234,8 +234,8 @@ open class DhPlayerView(context: Context, iPlayer: IPlayer) : FrameLayout(contex
 
     override fun onEvents(player: Player, events: Player.Events) {
         super.onEvents(player, events)
-        iPlayer?.getPlayerState("Player: onEvents ")
-//        updateTime()
+        iPlayer?.getPlayerState("Player:  $events")
+        Log.d("dinhhuong", "Player State: onEvent $eventLogger")
     }
 
     override fun onTimelineChanged(timeline: Timeline, reason: Int) {
@@ -261,9 +261,15 @@ open class DhPlayerView(context: Context, iPlayer: IPlayer) : FrameLayout(contex
 
     //method of seekbar
     override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-        if (fromUser) {
-            exoPlayer!!.seekTo(progress.toLong());
-        }
+////        if (fromUser) {
+////            exoPlayer!!.seekTo(progress.toLong());
+////        }
+//        if (fromUser) {
+//            val duration = exoPlayer!!.duration
+//            val newPosition = (progress * duration) / 1000L
+//            Log.d("dinhhuong","current progress: " + exoPlayer!!.currentPosition)
+//            exoPlayer!!.seekTo(newPosition)
+//        }
     }
 
     override fun onStartTrackingTouch(seekBar: SeekBar?) {
@@ -271,16 +277,10 @@ open class DhPlayerView(context: Context, iPlayer: IPlayer) : FrameLayout(contex
     }
 
     override fun onStopTrackingTouch(seekBar: SeekBar?) {
+        z
         if (state == STATE_PLAYING || state == STATE_PAUSE) {
-            Log.d("dh", " seekBar.Progress: " + seekBar!!.progress.toString())
-            exoPlayer?.seekTo(seekBar!!.progress.toLong())
+            Log.d("onStopTrackingTouch", " seekBar.Progress: " + seekBar!!.progress.toString())
+            exoPlayer?.seekTo(seekBar!!.progress.toLong() * 1000L)
         }
-    }
-
-    private fun updateSeekBar() {
-        val duration = exoPlayer!!.duration
-        val currentPosition = exoPlayer!!.currentPosition
-        val progress = (currentPosition * 1000 / duration).toInt()
-        seekBar!!.progress = progress
     }
 }
