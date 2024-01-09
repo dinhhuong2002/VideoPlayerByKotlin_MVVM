@@ -58,7 +58,7 @@ class HomeFragment : Fragment(), IPlayer {
         var url2: String =
             "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4"
 
-        dhPlayerView = context?.let { DhPlayerView(it, this) }
+        dhPlayerView = context?.let { DhPlayerView(it,null, this) }
         playerViewJava = PlayerViewJava(context)
 
         //set view dhPlayer from Libs

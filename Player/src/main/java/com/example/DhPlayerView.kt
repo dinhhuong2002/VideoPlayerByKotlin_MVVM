@@ -2,6 +2,7 @@ package com.example
 
 import android.content.Context
 import android.os.Looper
+import android.util.AttributeSet
 import android.util.Log
 import android.view.LayoutInflater
 import android.widget.FrameLayout
@@ -20,9 +21,10 @@ import com.example.player.R
 import java.util.Formatter
 import java.util.Locale
 
-
-open class DhPlayerView(context: Context, iPlayer: IPlayer) : FrameLayout(context), Player.Listener,
+class DhPlayerView(context: Context, attributeSet: AttributeSet?, iPlayer: IPlayer?) : FrameLayout(context, attributeSet),
+    Player.Listener,
     SeekBar.OnSeekBarChangeListener {
+
 
     private var iPlayer: IPlayer? = null //khoi tao interface
     private lateinit var playerView: PlayerView
@@ -32,7 +34,6 @@ open class DhPlayerView(context: Context, iPlayer: IPlayer) : FrameLayout(contex
     private var icPlay: ImageView? = null
     private var icForward: ImageView? = null
     private var icPause: ImageView? = null
-
 
     private var icBack: ImageView? = null
     private var seekBar: SeekBar? = null
