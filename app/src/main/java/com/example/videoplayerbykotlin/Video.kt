@@ -5,9 +5,7 @@ import android.widget.ImageView
 class Video {
     lateinit var title: String
      var url: String
-         get() {
-             return url
-         }
+         private set
     lateinit var description: String
     private lateinit var thumb: ImageView
 

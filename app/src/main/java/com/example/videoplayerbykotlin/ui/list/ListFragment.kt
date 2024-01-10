@@ -5,18 +5,21 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.media3.common.util.Log
+import androidx.media3.common.util.UnstableApi
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.DhPlayerView
+import com.example.IPlayer
 import com.example.videoplayerbykotlin.R
 import com.example.videoplayerbykotlin.Video
 
 
-class ListFragment : Fragment() {
-    // TODO: Rename and change types of parameters
+class ListFragment : Fragment(),IPlayer {
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var videoAdapter: VideoAdapter
+    private var dhPlayerView: DhPlayerView? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -52,11 +55,30 @@ class ListFragment : Fragment() {
             Video("https://43324700545123422b.lotuscdn.vn/201204812902309888/2020/12/30/WomanWalking-1609303462769.mp4"),
             Video("http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4"),
 
-        )
+            )
 
         // Initialize the adapter with the sample data
         videoAdapter = VideoAdapter(videoList)
         recyclerView.adapter = videoAdapter
+
+        recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                super.onScrollStateChanged(recyclerView, newState)
+            }
+
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                val layoutManager = recyclerView.layoutManager as LinearLayoutManager
+                val visiblePosition: Int =
+                    layoutManager.findFirstCompletelyVisibleItemPosition() //find view completely visiable
+                if (visiblePosition > -1) {
+                    val v: View? = layoutManager.findViewByPosition(visiblePosition)
+                    val url: String = videoList[visiblePosition].url
+                    dhPlayerView = context?.let { DhPlayerView(it,null,null) }
+                    dhPlayerView!!.playVideoByUrl(url)
+                }
+            }
+        })
         return view
     }
 
@@ -96,4 +118,11 @@ class ListFragment : Fragment() {
 
     }
 
+    override fun getPlayerState(eventLog: String) {
+    }
+
+    override fun onDestroy() {
+        // Perform cleanup or resource release here before the fragment is destroyed.
+        super.onDestroy()
+    }
 }

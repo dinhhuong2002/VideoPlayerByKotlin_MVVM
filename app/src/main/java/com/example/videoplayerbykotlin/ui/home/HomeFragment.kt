@@ -68,13 +68,13 @@ class HomeFragment : Fragment(), IPlayer {
         Log.d(TAG, "Clicked button config!")
         Log.d(TAG, url)
 
-        dhPlayerView!!.playVideoByUrl(requireContext(), playLink)
+        dhPlayerView!!.playVideoByUrl( playLink)
 
         //click on button Config
         btnConfig?.setOnClickListener {
 
 
-            dhPlayerView!!.playVideoByUrl(requireContext(), playLink)
+            dhPlayerView!!.playVideoByUrl(playLink)
         }
     }
 
@@ -84,6 +84,10 @@ class HomeFragment : Fragment(), IPlayer {
         var currentLog: String = textViewShowConfig?.text.toString()
         textViewShowConfig?.movementMethod = ScrollingMovementMethod()
         textViewShowConfig?.text = "$eventLog \n $currentLog"
+    }
 
+    override fun onDestroy() {
+        // Perform cleanup or resource release here before the fragment is destroyed.
+        super.onDestroy()
     }
 }
