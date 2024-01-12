@@ -4,15 +4,21 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.OptIn
 import androidx.fragment.app.Fragment
 import androidx.media3.common.util.Log
 import androidx.media3.common.util.UnstableApi
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.android.volley.Request
+import com.android.volley.Response
+import com.android.volley.toolbox.JsonObjectRequest
+import com.android.volley.toolbox.Volley
 import com.example.DhPlayerView
 import com.example.IPlayer
 import com.example.videoplayerbykotlin.R
 import com.example.videoplayerbykotlin.Video
+import org.json.JSONObject
 
 
 class ListFragment : Fragment(),IPlayer {
@@ -61,20 +67,24 @@ class ListFragment : Fragment(),IPlayer {
         videoAdapter = VideoAdapter(videoList)
         recyclerView.adapter = videoAdapter
 
+        getJsonData();
+
+
         recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                 super.onScrollStateChanged(recyclerView, newState)
             }
 
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+            @OptIn(UnstableApi::class) override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
                 val layoutManager = recyclerView.layoutManager as LinearLayoutManager
-                val visiblePosition: Int =
-                    layoutManager.findFirstCompletelyVisibleItemPosition() //find view completely visiable
+                val visiblePosition: Int = layoutManager.findFirstCompletelyVisibleItemPosition()
+                Log.d("Xuantk", "check position: $visiblePosition")
+                //find first view completely visiable
                 if (visiblePosition > -1) {
-                    val v: View? = layoutManager.findViewByPosition(visiblePosition)
                     val url: String = videoList[visiblePosition].url
                     dhPlayerView = context?.let { DhPlayerView(it,null,null) }
+                    Log.d("Xuantk", "check url: $url")
                     dhPlayerView!!.playVideoByUrl(url)
                 }
             }
@@ -82,43 +92,20 @@ class ListFragment : Fragment(),IPlayer {
         return view
     }
 
-    private fun getListVideo(): ArrayList<Video> {
-        val videoList: ArrayList<Video> = ArrayList()
-        videoList.add(Video("http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"))
-        videoList.add(Video("http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4"))
-        videoList.add(Video("http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4"))
-        videoList.add(Video("https://43324700545123422b.lotuscdn.vn/201204812902309888/2020/12/30/WomanWalking-1609303462769.mp4"))
-        videoList.add(Video("https://43324700545123422b.lotuscdn.vn/201204812902309888/2020/12/2/918127046-1606890428689386032470.mp4"))
-        videoList.add(Video("http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4"))
+    private fun getJsonData() {
+        var dataJsonFile = "https://www.jsonkeeper.com/b/H63R"
+        val requestQueue = Volley.newRequestQueue(context)
 
-        videoList.add(Video("http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"))
-        videoList.add(Video("http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4"))
-        videoList.add(Video("http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4"))
-        videoList.add(Video("https://43324700545123422b.lotuscdn.vn/201204812902309888/2020/12/30/WomanWalking-1609303462769.mp4"))
-        videoList.add(Video("https://43324700545123422b.lotuscdn.vn/201204812902309888/2020/12/2/918127046-1606890428689386032470.mp4"))
-        videoList.add(Video("http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4"))
-
-        videoList.add(Video("http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"))
-        videoList.add(Video("http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4"))
-        videoList.add(Video("http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4"))
-        videoList.add(Video("https://43324700545123422b.lotuscdn.vn/201204812902309888/2020/12/30/WomanWalking-1609303462769.mp4"))
-        videoList.add(Video("https://43324700545123422b.lotuscdn.vn/201204812902309888/2020/12/2/918127046-1606890428689386032470.mp4"))
-        videoList.add(Video("http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4"))
-
-        videoList.add(Video("http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"))
-        videoList.add(Video("http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4"))
-        videoList.add(Video("http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4"))
-        videoList.add(Video("https://43324700545123422b.lotuscdn.vn/201204812902309888/2020/12/30/WomanWalking-1609303462769.mp4"))
-        videoList.add(Video("https://43324700545123422b.lotuscdn.vn/201204812902309888/2020/12/2/918127046-1606890428689386032470.mp4"))
-        videoList.add(Video("http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4"))
-        return videoList
-    }
+            }
 
     companion object {
 
     }
 
-    override fun getPlayerState(eventLog: String) {
+    @OptIn(UnstableApi::class) override fun getPlayerState(eventLog: String) {
+
+        var currentLog: String = eventLog
+        Log.d("Xuantk", "check video log: $currentLog")
     }
 
     override fun onDestroy() {

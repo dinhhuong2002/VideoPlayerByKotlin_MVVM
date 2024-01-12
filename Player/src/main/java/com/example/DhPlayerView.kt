@@ -25,6 +25,8 @@ class DhPlayerView(context: Context, attributeSet: AttributeSet?, iPlayer: IPlay
     Player.Listener,
     SeekBar.OnSeekBarChangeListener {
 
+    constructor(context: Context, attributeSet: AttributeSet?) : this(context, attributeSet, null)
+
 
     private var iPlayer: IPlayer? = null //khoi tao interface
     private lateinit var playerView: PlayerView
@@ -33,7 +35,6 @@ class DhPlayerView(context: Context, attributeSet: AttributeSet?, iPlayer: IPlay
     private var exoPlayer: ExoPlayer? = null
     private var icPlay: ImageView? = null
     private var icForward: ImageView? = null
-    private var icPause: ImageView? = null
 
     private var icBack: ImageView? = null
     private var seekBar: SeekBar? = null
@@ -47,7 +48,6 @@ class DhPlayerView(context: Context, attributeSet: AttributeSet?, iPlayer: IPlay
     private var STATE_IDLE = 1
     private var STATE_PLAYING = 2
     private var STATE_PAUSE = 3
-    private var STATE_ENDED = 4
 
     var state = STATE_IDLE
 
@@ -97,7 +97,7 @@ class DhPlayerView(context: Context, attributeSet: AttributeSet?, iPlayer: IPlay
 
     }
 
-    fun playVideoByUrl(context: Context, url: String) {
+    fun playVideoByUrl( url: String) {
         try {
             icPlay?.setImageResource(R.drawable.ic_play)
             val mediaItem = MediaItem.fromUri(url)
@@ -109,11 +109,11 @@ class DhPlayerView(context: Context, attributeSet: AttributeSet?, iPlayer: IPlay
             state = STATE_PLAYING
             exoPlayer!!.addListener(this) // get call back
             exoPlayer!!.addAnalyticsListener(EventLogger()) //add eventLogger to show log PlayerState in Logcat
-            if (thread == null) {
-                startLooping()
-            }
+
+            startLooping()
         } catch (e: Exception) {
             e.printStackTrace()
+            Log.e("", "Exception when playing video: $e")
         }
     }
 
@@ -278,7 +278,6 @@ class DhPlayerView(context: Context, attributeSet: AttributeSet?, iPlayer: IPlay
     }
 
     override fun onStopTrackingTouch(seekBar: SeekBar?) {
-        z
         if (state == STATE_PLAYING || state == STATE_PAUSE) {
             Log.d("onStopTrackingTouch", " seekBar.Progress: " + seekBar!!.progress.toString())
             exoPlayer?.seekTo(seekBar!!.progress.toLong() * 1000L)

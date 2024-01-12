@@ -8,16 +8,18 @@
     android:orientation="vertical"
     tools:context=".MainActivity">
 
-    <com.example.DhPlayerView
-            android:id="@+id/videoInList"
-            android:layout_width="match_parent"
-            android:layout_height="220dp"/>
-
 <!--    <FrameLayout-->
 <!--        android:id="@+id/videoInList"-->
 <!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="220dp">-->
+<!--        android:layout_height="200dp">-->
+
+        <com.example.DhPlayerView
+            android:id="@+id/videoInList"
+            android:layout_width="match_parent"
+            android:layout_height="220dp" />
 <!--    </FrameLayout>-->
+
+
 
     <TextView
         android:id="@+id/linkOfTheVideo"
