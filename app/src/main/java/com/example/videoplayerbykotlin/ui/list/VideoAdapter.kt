@@ -1,25 +1,33 @@
 package com.example.videoplayerbykotlin.ui.list
 
-import android.util.AttributeSet
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.TextView
+import androidx.annotation.OptIn
+import androidx.media3.common.util.Log
+import androidx.media3.common.util.UnstableApi
 import androidx.recyclerview.widget.RecyclerView
 import com.example.DhPlayerView
 import com.example.IPlayer
 import com.example.videoplayerbykotlin.R
 import com.example.videoplayerbykotlin.Video
+import org.json.JSONObject
 
-class VideoAdapter(private val myVideoList: List<Video>) :
+class VideoAdapter(
+    private val myVideoList: List<Video>,
+    private val context: Context
+) :
     RecyclerView.Adapter<VideoAdapter.ViewHolder>() , IPlayer{
 
     class ViewHolder(ItemView: View) : RecyclerView.ViewHolder(ItemView),
         IPlayer {
 
         var dhPlayerViewInList: DhPlayerView = itemView.findViewById(R.id.videoInList)
-        var tvLinkVideoInList: TextView = itemView.findViewById(R.id.linkOfTheVideo)
+        var tvTitleVideoInList: TextView = itemView.findViewById(R.id.linkOfTheVideo)
+
         override fun getPlayerState(eventLog: String) {
 
         }
@@ -29,15 +37,15 @@ class VideoAdapter(private val myVideoList: List<Video>) :
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.video_items, parent, false)
 
-
         return ViewHolder(view)
     }
 
+    @OptIn(UnstableApi::class)
     override fun onBindViewHolder(holder: VideoAdapter.ViewHolder, position: Int) {
         val itemVideo = myVideoList[position]
 
-        holder.tvLinkVideoInList.text = itemVideo.url
 
+        holder.tvTitleVideoInList.text = itemVideo.url
         holder.dhPlayerViewInList.playVideoByUrl(itemVideo.url)
 
     }
@@ -48,6 +56,6 @@ class VideoAdapter(private val myVideoList: List<Video>) :
     }
 
     override fun getPlayerState(eventLog: String) {
-        TODO("Not yet implemented")
+
     }
 }
