@@ -1,6 +1,7 @@
 package com.example.videoplayerbykotlin.ui.list
 
 import android.annotation.SuppressLint
+import android.content.ContentValues.TAG
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -33,30 +34,52 @@ class ListFragment : Fragment(), IPlayer {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_list, container, false)
 
-        dhPlayerView = DhPlayerView(requireContext(),null)
+        dhPlayerView = DhPlayerView(requireContext(), null, null)
         recyclerView = view.findViewById(R.id.recycler_video_view)
-        linearLayoutManager = LinearLayoutManager(context)
-        recyclerView.layoutManager = linearLayoutManager
-
-        // Initialize the adapter with the sample data
-        videoAdapter = context?.let { VideoAdapter(listVideoInFragment, it) }!!
-        recyclerView.adapter = videoAdapter
 
         getDataFromJsonRaw()
 
+        //init layoutManager
+        linearLayoutManager = LinearLayoutManager(context)
+
+
+        // Initialize the adapter with the sample data
+        videoAdapter = context?.let { VideoAdapter(listVideoInFragment, it) }!!
+
+        recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            @OptIn(UnstableApi::class)
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                super.onScrollStateChanged(recyclerView, newState)
+        }
+
+            @OptIn(UnstableApi::class)
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                val visiblePosSelected = linearLayoutManager!!.findFirstCompletelyVisibleItemPosition()
+                Log.d(TAG,"VisiblePosition: $visiblePosSelected")
+
+                if(visiblePosSelected > -1){
+                    val linkVideoSelected = listVideoInFragment[visiblePosSelected].url
+                    Log.d(TAG, "title: " + listVideoInFragment[visiblePosSelected].title)
+                    dhPlayerView!!.playVideoByUrl(linkVideoSelected)
+                }
+            }
+        })
+        recyclerView.layoutManager = linearLayoutManager
+        recyclerView.adapter = videoAdapter
+        videoAdapter.notifyDataSetChanged();
         return view
     }
 
-
     @SuppressLint("UnsafeOptInUsageError")
-    fun getDataFromJsonRaw(){
+    fun getDataFromJsonRaw() {
         val jsonData = resources.openRawResource(R.raw.music).bufferedReader().use { it.readText() }
         val outputJsonString = JSONObject(jsonData)
 
-        val videolist = outputJsonString.getJSONArray("Video")
-        for (i in 0 until videolist.length()) {
+        val videoList = outputJsonString.getJSONArray("Video")
+        for (i in 0 until videoList.length()) {
 
-            val itemObj: JSONObject = videolist.getJSONObject(i)
+            val itemObj: JSONObject = videoList.getJSONObject(i)
 
             var title = itemObj.getString("title")
             var url = itemObj.getString("sources")
@@ -68,6 +91,7 @@ class ListFragment : Fragment(), IPlayer {
             listVideoInFragment.add(video)
         }
     }
+
     companion object {
 
     }
@@ -75,8 +99,6 @@ class ListFragment : Fragment(), IPlayer {
     @OptIn(UnstableApi::class)
     override fun getPlayerState(eventLog: String) {
 
-        var currentLog: String = eventLog
-        Log.d("Xuantk", "check video log: $currentLog")
     }
 
     override fun onDestroy() {

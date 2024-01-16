@@ -80,7 +80,7 @@ class HomeFragment : Fragment(), IPlayer {
 
     @SuppressLint("SetTextI18n")
     override fun getPlayerState(eventLog: String) {
-
+//        Log.d("ContentValues", "log video state in home fragment: $eventLog")
         var currentLog: String = textViewShowConfig?.text.toString()
         textViewShowConfig?.movementMethod = ScrollingMovementMethod()
         textViewShowConfig?.text = "$eventLog \n $currentLog"
@@ -89,5 +89,6 @@ class HomeFragment : Fragment(), IPlayer {
     override fun onDestroy() {
         // Perform cleanup or resource release here before the fragment is destroyed.
         super.onDestroy()
+
     }
 }

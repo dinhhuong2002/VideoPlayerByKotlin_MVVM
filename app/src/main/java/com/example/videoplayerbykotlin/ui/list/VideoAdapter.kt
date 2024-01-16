@@ -44,18 +44,16 @@ class VideoAdapter(
     override fun onBindViewHolder(holder: VideoAdapter.ViewHolder, position: Int) {
         val itemVideo = myVideoList[position]
 
-
-        holder.tvTitleVideoInList.text = itemVideo.url
+        holder.tvTitleVideoInList.text = itemVideo.title
         holder.dhPlayerViewInList.playVideoByUrl(itemVideo.url)
-
     }
 
     override fun getItemCount(): Int {
         return myVideoList.size
 //        return 5
     }
-
     override fun getPlayerState(eventLog: String) {
 
     }
+
 }
