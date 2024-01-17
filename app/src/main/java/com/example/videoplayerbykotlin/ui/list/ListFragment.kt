@@ -61,6 +61,9 @@ class ListFragment : Fragment(), IPlayer {
                 if(visiblePosSelected > -1){
                     val linkVideoSelected = listVideoInFragment[visiblePosSelected].url
                     Log.d(TAG, "title: " + listVideoInFragment[visiblePosSelected].title)
+                    var v = linearLayoutManager!!.findViewByPosition(visiblePosSelected)
+                    dhPlayerView = v!!.findViewById(R.id.videoInList)
+
                     dhPlayerView!!.playVideoByUrl(linkVideoSelected)
                 }
             }

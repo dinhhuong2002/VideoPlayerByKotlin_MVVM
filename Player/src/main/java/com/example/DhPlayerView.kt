@@ -99,7 +99,7 @@ class DhPlayerView(context: Context, attributeSet: AttributeSet?, iPlayer: IPlay
     }
 
     fun playVideoByUrl(url: String) {
-        Log.d("ContentValues", "play video by url")
+        Log.d("ContentValues", "play video by url with dhPlayerView")
         try {
             icPlay?.setImageResource(R.drawable.ic_play)
             val mediaItem = MediaItem.fromUri(url)
