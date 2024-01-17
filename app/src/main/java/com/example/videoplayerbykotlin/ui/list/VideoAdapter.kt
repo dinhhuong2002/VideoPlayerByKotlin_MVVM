@@ -45,7 +45,7 @@ class VideoAdapter(
         val itemVideo = myVideoList[position]
 
         holder.tvTitleVideoInList.text = itemVideo.title
-        holder.dhPlayerViewInList.playVideoByUrl(itemVideo.url)
+//        holder.dhPlayerViewInList.playVideoByUrl(itemVideo.url)
     }
 
     override fun getItemCount(): Int {

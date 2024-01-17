@@ -52,7 +52,7 @@ class HomeFragment : Fragment(), IPlayer {
         textViewShowConfig?.movementMethod = ScrollingMovementMethod()
 
         var url: String =
-            "http://techslides.com/demos/sample-videos/small.mp4"
+            "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4"
         var url1: String =
             "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4"
         var url2: String =
@@ -68,7 +68,7 @@ class HomeFragment : Fragment(), IPlayer {
         Log.d(TAG, "Clicked button config!")
         Log.d(TAG, url)
 
-        dhPlayerView!!.playVideoByUrl( playLink)
+        dhPlayerView!!.playVideoByUrl(url)
 
         //click on button Config
         btnConfig?.setOnClickListener {

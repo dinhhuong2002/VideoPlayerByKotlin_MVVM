@@ -21,7 +21,8 @@ import com.example.player.R
 import java.util.Formatter
 import java.util.Locale
 
-class DhPlayerView(context: Context, attributeSet: AttributeSet?, iPlayer: IPlayer?) : FrameLayout(context, attributeSet),
+class DhPlayerView(context: Context, attributeSet: AttributeSet?, iPlayer: IPlayer?) :
+    FrameLayout(context, attributeSet),
     Player.Listener,
     SeekBar.OnSeekBarChangeListener {
 
@@ -49,7 +50,7 @@ class DhPlayerView(context: Context, attributeSet: AttributeSet?, iPlayer: IPlay
     private var STATE_PLAYING = 2
     private var STATE_PAUSE = 3
 
-    var state = STATE_IDLE
+    private var state = STATE_IDLE
 
     init {
         init()
@@ -97,27 +98,31 @@ class DhPlayerView(context: Context, attributeSet: AttributeSet?, iPlayer: IPlay
 
     }
 
-    fun playVideoByUrl( url: String) {
+    fun playVideoByUrl(url: String) {
+        Log.d("ContentValues", "play video by url")
         try {
             icPlay?.setImageResource(R.drawable.ic_play)
             val mediaItem = MediaItem.fromUri(url)
 
             exoPlayer!!.setMediaItem(mediaItem)
             exoPlayer!!.prepare()
-            exoPlayer!!.playWhenReady = true;
+            exoPlayer!!.play()
+//            exoPlayer!!.playWhenReady = true
 
             state = STATE_PLAYING
             exoPlayer!!.addListener(this) // get call back
             exoPlayer!!.addAnalyticsListener(EventLogger()) //add eventLogger to show log PlayerState in Logcat
+            Log.d("URL", "URL = $url")
 
             startLooping()
         } catch (e: Exception) {
             e.printStackTrace()
-            Log.e("", "Exception when playing video: $e")
+            Log.e("ContentValues", "Exception when playing video: $e")
         }
     }
 
     private fun playPause() {
+        Log.d("ContentValues", "click on play or pause button state = $state")
         if (state == STATE_PLAYING && exoPlayer!!.isPlaying) {
             exoPlayer?.pause()
             icPlay?.setImageResource(R.drawable.ic_pause)
@@ -130,6 +135,7 @@ class DhPlayerView(context: Context, attributeSet: AttributeSet?, iPlayer: IPlay
     }
 
     private fun seekForward() {
+        Log.d("ContentValues", "click seek forward button")
         seekBar?.progress = seekBar?.progress!! + 15
         exoPlayer!!.seekForward()
     }
@@ -183,6 +189,7 @@ class DhPlayerView(context: Context, attributeSet: AttributeSet?, iPlayer: IPlay
             Player.STATE_IDLE -> {
                 Log.d("Xuantk", "Player.STATE_IDLE: ")
                 iPlayer?.getPlayerState("Player: STATE_IDLE ")
+                state = STATE_IDLE
             }
 
             Player.STATE_BUFFERING -> {
@@ -195,11 +202,13 @@ class DhPlayerView(context: Context, attributeSet: AttributeSet?, iPlayer: IPlay
                     startLooping()
                     Thread.sleep(1000)
                 }.start()
+                state = STATE_PLAYING
             }
 
             Player.STATE_ENDED -> {
                 iPlayer?.getPlayerState("Player.STATE_ENDED -> video ended ")
                 exoPlayer!!.repeatMode = ExoPlayer.REPEAT_MODE_ONE;
+
             }
         }
     }
@@ -235,7 +244,7 @@ class DhPlayerView(context: Context, attributeSet: AttributeSet?, iPlayer: IPlay
 
     override fun onEvents(player: Player, events: Player.Events) {
         super.onEvents(player, events)
-        iPlayer?.getPlayerState("Player:  $events")
+//        iPlayer?.getPlayerState("Player:  $events")
         Log.d("dinhhuong", "Player State: onEvent $eventLogger")
     }
 
@@ -247,11 +256,13 @@ class DhPlayerView(context: Context, attributeSet: AttributeSet?, iPlayer: IPlay
     override fun onIsPlayingChanged(isPlaying: Boolean) {
         super.onIsPlayingChanged(isPlaying)
         var playOrPause: String
-
+        Log.d("ContentValues", "onIsPlayingChanged: isPlaying = $isPlaying")
         if (isPlaying) {
+            Log.d("ContentValues", "onIsPlayingChanged: change state = $STATE_PLAYING")
             playOrPause = "playing"
             state = STATE_PLAYING
         } else {
+            Log.d("ContentValues", "onIsPlayingChanged: change state = $STATE_PAUSE")
             playOrPause = "paused"
             state = STATE_PAUSE
         }
@@ -262,15 +273,6 @@ class DhPlayerView(context: Context, attributeSet: AttributeSet?, iPlayer: IPlay
 
     //method of seekbar
     override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-////        if (fromUser) {
-////            exoPlayer!!.seekTo(progress.toLong());
-////        }
-//        if (fromUser) {
-//            val duration = exoPlayer!!.duration
-//            val newPosition = (progress * duration) / 1000L
-//            Log.d("dinhhuong","current progress: " + exoPlayer!!.currentPosition)
-//            exoPlayer!!.seekTo(newPosition)
-//        }
     }
 
     override fun onStartTrackingTouch(seekBar: SeekBar?) {
