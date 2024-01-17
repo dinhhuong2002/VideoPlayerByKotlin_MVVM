@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.FrameLayout
 import androidx.annotation.OptIn
 import androidx.fragment.app.Fragment
 import androidx.media3.common.util.Log
@@ -26,6 +27,7 @@ class ListFragment : Fragment(), IPlayer {
     private lateinit var videoAdapter: VideoAdapter
     private val listVideoInFragment: MutableList<Video> = ArrayList()
     private var dhPlayerView: DhPlayerView? = null
+    private var frameLayout: FrameLayout? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -42,9 +44,11 @@ class ListFragment : Fragment(), IPlayer {
         //init layoutManager
         linearLayoutManager = LinearLayoutManager(context)
 
+        recyclerView.layoutManager = linearLayoutManager
 
         // Initialize the adapter with the sample data
-        videoAdapter = context?.let { VideoAdapter(listVideoInFragment, it) }!!
+        videoAdapter = VideoAdapter(listVideoInFragment, dhPlayerView!!)
+        recyclerView.adapter = videoAdapter
 
         recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             @OptIn(UnstableApi::class)
@@ -52,6 +56,7 @@ class ListFragment : Fragment(), IPlayer {
                 super.onScrollStateChanged(recyclerView, newState)
         }
 
+            @SuppressLint("MissingInflatedId")
             @OptIn(UnstableApi::class)
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
@@ -61,12 +66,15 @@ class ListFragment : Fragment(), IPlayer {
                 if(visiblePosSelected > -1){
                     val linkVideoSelected = listVideoInFragment[visiblePosSelected].url
                     Log.d(TAG, "title: " + listVideoInFragment[visiblePosSelected].title)
+
+                    frameLayout = view.findViewById(R.id.videoInList)
+                    frameLayout!!.addView(dhPlayerView)
+
                     dhPlayerView!!.playVideoByUrl(linkVideoSelected)
                 }
             }
         })
-        recyclerView.layoutManager = linearLayoutManager
-        recyclerView.adapter = videoAdapter
+
         videoAdapter.notifyDataSetChanged();
         return view
     }

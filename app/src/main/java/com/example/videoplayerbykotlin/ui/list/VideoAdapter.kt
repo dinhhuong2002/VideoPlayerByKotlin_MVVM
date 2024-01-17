@@ -14,38 +14,37 @@ import com.example.DhPlayerView
 import com.example.IPlayer
 import com.example.videoplayerbykotlin.R
 import com.example.videoplayerbykotlin.Video
-import org.json.JSONObject
+
 
 class VideoAdapter(
     private val myVideoList: List<Video>,
-    private val context: Context
+    private var dhPlayerView: DhPlayerView
+//    private val context: Context
 ) :
     RecyclerView.Adapter<VideoAdapter.ViewHolder>() , IPlayer{
 
-    class ViewHolder(ItemView: View) : RecyclerView.ViewHolder(ItemView),
-        IPlayer {
+    class ViewHolder(ItemView: View) : RecyclerView.ViewHolder(ItemView){
 
-        var dhPlayerViewInList: DhPlayerView = itemView.findViewById(R.id.videoInList)
+        var dhPlayerViewInList: FrameLayout = itemView.findViewById(R.id.videoInList)
         var tvTitleVideoInList: TextView = itemView.findViewById(R.id.linkOfTheVideo)
 
-        override fun getPlayerState(eventLog: String) {
-
-        }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VideoAdapter.ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.video_items, parent, false)
+
+        dhPlayerView = DhPlayerView(parent.context,null,null)
 
         return ViewHolder(view)
     }
 
     @OptIn(UnstableApi::class)
-    override fun onBindViewHolder(holder: VideoAdapter.ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val itemVideo = myVideoList[position]
 
         holder.tvTitleVideoInList.text = itemVideo.title
-//        holder.dhPlayerViewInList.playVideoByUrl(itemVideo.url)
+        holder.dhPlayerViewInList.addView(dhPlayerView)
     }
 
     override fun getItemCount(): Int {
