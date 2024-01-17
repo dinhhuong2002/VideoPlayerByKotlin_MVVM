@@ -35,8 +35,6 @@ class ListFragment : Fragment(), IPlayer {
     ): View? {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_list, container, false)
-
-        dhPlayerView = DhPlayerView(requireContext(), null, null)
         recyclerView = view.findViewById(R.id.recycler_video_view)
 
         getDataFromJsonRaw()
@@ -46,6 +44,7 @@ class ListFragment : Fragment(), IPlayer {
 
         recyclerView.layoutManager = linearLayoutManager
 
+        dhPlayerView = DhPlayerView(requireContext(), null, null)
         // Initialize the adapter with the sample data
         videoAdapter = VideoAdapter(listVideoInFragment, dhPlayerView!!)
         recyclerView.adapter = videoAdapter
@@ -54,28 +53,32 @@ class ListFragment : Fragment(), IPlayer {
             @OptIn(UnstableApi::class)
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                 super.onScrollStateChanged(recyclerView, newState)
-        }
+            }
 
             @SuppressLint("MissingInflatedId")
             @OptIn(UnstableApi::class)
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
-                val visiblePosSelected = linearLayoutManager!!.findFirstCompletelyVisibleItemPosition()
-                Log.d(TAG,"VisiblePosition: $visiblePosSelected")
 
-                if(visiblePosSelected > -1){
+                val visiblePosSelected =
+                    linearLayoutManager!!.findFirstCompletelyVisibleItemPosition()
+                Log.d(TAG, "VisiblePosition: $visiblePosSelected")
+
+                if (visiblePosSelected > -1) {
                     val linkVideoSelected = listVideoInFragment[visiblePosSelected].url
                     Log.d(TAG, "title: " + listVideoInFragment[visiblePosSelected].title)
 
-                    frameLayout = view.findViewById(R.id.videoInList)
+                    var v = linearLayoutManager!!.findViewByPosition(visiblePosSelected)
+                    frameLayout = v!!.findViewById(R.id.videoInList)
+                    if (dhPlayerView!!.parent != null) {
+                        (dhPlayerView!!.parent as ViewGroup).removeView(dhPlayerView)
+                    }
                     frameLayout!!.addView(dhPlayerView)
-
                     dhPlayerView!!.playVideoByUrl(linkVideoSelected)
                 }
+                videoAdapter.notifyDataSetChanged();
             }
         })
-
-        videoAdapter.notifyDataSetChanged();
         return view
     }
 

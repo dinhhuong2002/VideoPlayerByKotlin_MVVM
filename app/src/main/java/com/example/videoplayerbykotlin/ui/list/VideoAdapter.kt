@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.TextView
 import androidx.annotation.OptIn
+import androidx.core.view.get
 import androidx.media3.common.util.Log
 import androidx.media3.common.util.UnstableApi
 import androidx.recyclerview.widget.RecyclerView
@@ -44,7 +45,7 @@ class VideoAdapter(
         val itemVideo = myVideoList[position]
 
         holder.tvTitleVideoInList.text = itemVideo.title
-        holder.dhPlayerViewInList.addView(dhPlayerView)
+//        holder.dhPlayerViewInList.addView(dhPlayerView,position)
     }
 
     override fun getItemCount(): Int {

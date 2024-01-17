@@ -68,7 +68,7 @@ class HomeFragment : Fragment(), IPlayer {
         Log.d(TAG, "Clicked button config!")
         Log.d(TAG, url)
 
-        dhPlayerView!!.playVideoByUrl(url)
+//        dhPlayerView!!.playVideoByUrl(url)
 
         //click on button Config
         btnConfig?.setOnClickListener {
@@ -89,6 +89,7 @@ class HomeFragment : Fragment(), IPlayer {
     override fun onDestroy() {
         // Perform cleanup or resource release here before the fragment is destroyed.
         super.onDestroy()
+        frameLayout!!.removeView(dhPlayerView)
 
     }
 }
