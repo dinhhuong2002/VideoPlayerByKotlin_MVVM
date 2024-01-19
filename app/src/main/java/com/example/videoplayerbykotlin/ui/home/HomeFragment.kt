@@ -49,32 +49,26 @@ class HomeFragment : Fragment(), IPlayer {
         btnConfig = view.findViewById<Button>(R.id.btn_Stream)
         textViewShowConfig = view.findViewById<TextView>(R.id.player_state)
 
-        textViewShowConfig?.movementMethod = ScrollingMovementMethod()
+    }
 
+    override fun onStart() {
+        super.onStart()
+
+        textViewShowConfig?.movementMethod = ScrollingMovementMethod()
         var url: String =
             "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4"
         var url1: String =
-            "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4"
-        var url2: String =
             "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4"
 
-        dhPlayerView = context?.let { DhPlayerView(it,null, this) }
+        dhPlayerView = context?.let { DhPlayerView(it, null, this) }
         playerViewJava = PlayerViewJava(context)
 
         //set view dhPlayer from Libs
         frameLayout?.addView(dhPlayerView)
-
-        val playLink: String = editTextLinkVideo?.text.toString()
-        Log.d(TAG, "Clicked button config!")
-        Log.d(TAG, url)
-
-//        dhPlayerView!!.playVideoByUrl(url)
-
-        //click on button Config
-        btnConfig?.setOnClickListener {
-
-
-            dhPlayerView!!.playVideoByUrl(playLink)
+        if (!dhPlayerView!!.isPlaying()) {
+            dhPlayerView!!.playVideoByUrl(url)
+        } else {
+            dhPlayerView!!.pauseVideo()
         }
     }
 
@@ -86,10 +80,31 @@ class HomeFragment : Fragment(), IPlayer {
         textViewShowConfig?.text = "$eventLog \n $currentLog"
     }
 
+    override fun onResume() {
+        super.onResume()
+        val playLink: String = editTextLinkVideo?.text.toString()
+        Log.d(TAG, "Clicked button config!")
+
+        //click on button Config
+        btnConfig?.setOnClickListener {
+            Log.d(TAG, "Clicked button config!")
+            dhPlayerView!!.playVideoByUrl(playLink)
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+
+
+    }
+
+    override fun onStop() {
+        super.onStop()
+        dhPlayerView!!.pauseVideo()
+    }
+
     override fun onDestroy() {
         // Perform cleanup or resource release here before the fragment is destroyed.
         super.onDestroy()
-        frameLayout!!.removeView(dhPlayerView)
-
     }
 }

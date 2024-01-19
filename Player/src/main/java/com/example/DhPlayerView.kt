@@ -1,5 +1,6 @@
 package com.example
 
+import android.content.ContentValues.TAG
 import android.content.Context
 import android.os.Looper
 import android.util.AttributeSet
@@ -120,6 +121,13 @@ class DhPlayerView(context: Context, attributeSet: AttributeSet?, iPlayer: IPlay
             Log.e("ContentValues", "Exception when playing video: $e")
         }
     }
+    fun pauseVideo(){
+        if(exoPlayer!!.isPlaying){
+            exoPlayer!!.pause()
+            state = STATE_PAUSE
+            Log.d("ContentValues", "state when switch fragment: state = $state")
+        }
+    }
 
     private fun playPause() {
         Log.d("ContentValues", "click on play or pause button state = $state")
@@ -132,6 +140,9 @@ class DhPlayerView(context: Context, attributeSet: AttributeSet?, iPlayer: IPlay
             icPlay?.setImageResource(R.drawable.ic_play)
             state = STATE_PLAYING
         }
+    }
+    fun isPlaying():Boolean{
+        return exoPlayer!!.isPlaying
     }
 
     private fun seekForward() {
@@ -285,4 +296,5 @@ class DhPlayerView(context: Context, attributeSet: AttributeSet?, iPlayer: IPlay
             exoPlayer?.seekTo(seekBar!!.progress.toLong() * 1000L)
         }
     }
+
 }

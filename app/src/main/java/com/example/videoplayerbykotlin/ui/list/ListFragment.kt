@@ -49,38 +49,11 @@ class ListFragment : Fragment(), IPlayer {
         videoAdapter = VideoAdapter(listVideoInFragment, dhPlayerView!!)
         recyclerView.adapter = videoAdapter
 
-        recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            @OptIn(UnstableApi::class)
-            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-                super.onScrollStateChanged(recyclerView, newState)
-            }
 
-            @SuppressLint("MissingInflatedId")
-            @OptIn(UnstableApi::class)
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                super.onScrolled(recyclerView, dx, dy)
-
-                val visiblePosSelected =
-                    linearLayoutManager!!.findFirstCompletelyVisibleItemPosition()
-                Log.d(TAG, "VisiblePosition: $visiblePosSelected")
-
-                if (visiblePosSelected > -1) {
-                    val linkVideoSelected = listVideoInFragment[visiblePosSelected].url
-                    Log.d(TAG, "title: " + listVideoInFragment[visiblePosSelected].title)
-
-                    var v = linearLayoutManager!!.findViewByPosition(visiblePosSelected)
-                    frameLayout = v!!.findViewById(R.id.videoInList)
-                    if (dhPlayerView!!.parent != null) {
-                        (dhPlayerView!!.parent as ViewGroup).removeView(dhPlayerView)
-                    }
-                    frameLayout!!.addView(dhPlayerView)
-                    dhPlayerView!!.playVideoByUrl(linkVideoSelected)
-                }
-                videoAdapter.notifyDataSetChanged();
-            }
-        })
         return view
     }
+
+
 
     @SuppressLint("UnsafeOptInUsageError")
     fun getDataFromJsonRaw() {
@@ -107,13 +80,61 @@ class ListFragment : Fragment(), IPlayer {
 
     }
 
-    @OptIn(UnstableApi::class)
-    override fun getPlayerState(eventLog: String) {
+    override fun onStart() {
+        super.onStart()
 
+    }
+
+    override fun onResume() {
+        super.onResume()
+        recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            @OptIn(UnstableApi::class)
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                super.onScrollStateChanged(recyclerView, newState)
+            }
+
+            @SuppressLint("MissingInflatedId")
+            @OptIn(UnstableApi::class)
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+
+                val visiblePosSelected =
+                    linearLayoutManager!!.findFirstCompletelyVisibleItemPosition()
+                Log.d(TAG, "VisiblePosition: $visiblePosSelected")
+
+                if (visiblePosSelected > -1) {
+                    val linkVideoSelected = listVideoInFragment[visiblePosSelected].url
+                    Log.d(TAG, "title: " + listVideoInFragment[visiblePosSelected].title)
+
+                    var v = linearLayoutManager!!.findViewByPosition(visiblePosSelected)
+                    frameLayout = v!!.findViewById(R.id.videoInList)
+                    if (dhPlayerView!!.parent != null) {
+                        (dhPlayerView!!.parent as ViewGroup).removeView(dhPlayerView)
+
+                    }
+                    frameLayout!!.addView(dhPlayerView)
+                    dhPlayerView!!.playVideoByUrl(linkVideoSelected)
+                }
+                videoAdapter.notifyDataSetChanged();
+            }
+        })
+    }
+
+    override fun onPause() {
+        super.onPause()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        dhPlayerView!!.pauseVideo()
     }
 
     override fun onDestroy() {
         // Perform cleanup or resource release here before the fragment is destroyed.
         super.onDestroy()
+    }
+    @OptIn(UnstableApi::class)
+    override fun getPlayerState(eventLog: String) {
+
     }
 }
